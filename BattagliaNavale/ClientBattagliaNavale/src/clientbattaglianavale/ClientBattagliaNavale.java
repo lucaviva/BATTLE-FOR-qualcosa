@@ -1,21 +1,38 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package clientbattaglianavale;
 
-/**
- *
- * @author informatica
- */
+import java.io.IOException;
+import java.util.Scanner;
+import java.io.PrintWriter;
+import java.net.Socket;
+
 public class ClientBattagliaNavale {
 
-    /**
-     * @param args the command line arguments
-     */
-    public static void main(String[] args) {
+    
+    
+    public ClientBattagliaNavale ()  {
+    
+    
+}
+    
+    
+    
+    
+    
+    public static void main(String[] args) throws IOException {
         
+     
+  
+        
+        try (Socket socket = new Socket("127.0.0.1", 42069)) {
+            Scanner in = new Scanner(socket.getInputStream());
+            PrintWriter out = new PrintWriter(socket.getOutputStream(), true);
+            while (true) {
+                if(in.hasNextLine()) {
+                System.out.println(in.nextLine());
+                break;
+                }
+            }
+        }
     }
     
 }

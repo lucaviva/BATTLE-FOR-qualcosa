@@ -5,7 +5,10 @@
  */
 package serverbattaglianavale;
 
+import java.io.PrintWriter;
 import java.net.ServerSocket;
+import java.net.Socket;
+import java.util.Date;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ExecutorService;
 import javax.swing.JFrame;
@@ -21,15 +24,19 @@ public class ServerBattagliaNavale {
     
     
     public static void main(String[] args) throws Exception{
-        /*
-        try(ServerSocket socket = new ServerSocket(42069)) {
+        
+        try(ServerSocket listener = new ServerSocket(42069)) {
             System.out.println("Il server e' attivo");
-            ExecutorService pool = Executors.newFixedThreadPool(2);
+            ExecutorService pool = Executors.newFixedThreadPool(200);
+            
+            
             while(true) {
-                
+                Gioco game = new Gioco();
+                pool.execute(game.new Giocatore(listener.accept(), "giocatore 1"));
+                pool.execute(game.new Giocatore(listener.accept(), "giocatore 2"));
             }
+
         }
-*/
            
     }
     
