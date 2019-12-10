@@ -23,6 +23,9 @@ public class Barca {
         this.Orientamento = Orientamento;
     }
 
+    Barca() {
+    }
+
     public int getLunghezza() {
         return lunghezza;
     }

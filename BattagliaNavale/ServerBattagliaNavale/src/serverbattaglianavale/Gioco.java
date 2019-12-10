@@ -53,9 +53,25 @@ public class Gioco {
         }
     }
     
+    private Barca interpretaIns(String testo) {
+        Barca b = new Barca();
+        if(testo != null || testo.length() == 5) {
+            int t = Integer.getInteger(testo);
+            if(t%2 == 1)
+                b.setOrientamento('v');
+            else
+                b.setOrientamento('o');
+            t /= 10;
+            
+        }
+            //PROVAE AD USARE 2 LETTERE PER CORDINATA (TRASFORMARE IN ASCII PER VALORE  INT)
+    }
+    
     private void inserisciBarche() {
-        output.println("Inizio inserimento barche (inserire coordinata di inizio e orientamento)");
+        output.println("Inizio inserimento barche (inserire coordinata (x,y) di inizio e orientamento (1 verticale, 2 orizzontale)");
         output.println("Inserisci barca da 5");
+        input.nextLine();
+        
     }
     
     @Override
