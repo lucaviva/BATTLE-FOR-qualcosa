@@ -52,25 +52,46 @@ public class Gioco {
             
         }
     }
-    
+    //AGGIUNGERE CONTROLLO DEI CONFLITTI TRA LE BARCHE
     private Barca interpretaIns(String testo) {
         Barca b = new Barca();
-        if(testo != null || testo.length() == 5) {
-            int t = Integer.getInteger(testo);
-            if(t%2 == 1)
-                b.setOrientamento('v');
+        if(testo != null || testo.length() == 3) {
+            //segmento la Stringa in input
+            int x = Character.getNumericValue(testo.charAt(0));
+            int y = Character.getNumericValue(testo.charAt(1));
+            char orient = testo.charAt(2);
+            if ( x >= 10 && x <= 30 ) //controllo che il valore di x sia una lettera dell'alfabeto
+                if ( y >= 10 && y <= 30 ) //controllo che il valore di y sia una lettera dell'alfabeto
+                    if (orient == 'o' || orient == 'v') //controllo che orient sia o (orizzontale) oopure v (verticale)
+                    {
+                        b.setInizio(new Coordinata(Character.getNumericValue(x) - 9, Character.getNumericValue(y) - 9));
+                        b.setOrientamento(orient);
+                        if (orient == 'o') //calcolo la coordinata di fine della barca
+                            b.setFine(new Coordinata(Character.getNumericValue(x) - 9 + b.getLunghezza(), Character.getNumericValue(y) - 9));
+                        else
+                            b.setFine(new Coordinata(Character.getNumericValue(x) - 9, Character.getNumericValue(y) - 9 + b.getLunghezza()));
+                    }
             else
-                b.setOrientamento('o');
-            t /= 10;
-            
+                     output.println("Errore nell'inserimento dei dati della barca");
         }
-            //PROVAE AD USARE 2 LETTERE PER CORDINATA (TRASFORMARE IN ASCII PER VALORE  INT)
+         return b;
     }
     
     private void inserisciBarche() {
-        output.println("Inizio inserimento barche (inserire coordinata (x,y) di inizio e orientamento (1 verticale, 2 orizzontale)");
-        output.println("Inserisci barca da 5");
-        input.nextLine();
+        output.println("INSS"); //prefisso INS sta per inserimento, S sta per "inizio inserimento"
+        output.println("INS5"); //prefisso INS sta per inserimento, 5 sta per "inserisci barca da 5"
+        barche.add(interpretaIns(input.nextLine()));
+        output.println("INS4"); //prefisso INS sta per inserimento, 4 sta per "inserisci barca da 4"
+        barche.add(interpretaIns(input.nextLine()));
+        for (int i = 0; i < 2; i++) { //ci sono 2 barche da 3
+            output.println("INS3"); //prefisso INS sta per inserimento, 3 sta per "inserisci barca da 3"
+            barche.add(interpretaIns(input.nextLine()));
+        }
+        for (int i = 0; i < 3; i++) { //ci sono 3 barche da 2
+            output.println("INS2"); //prefisso INS sta per inserimento, 2 sta per "inserisci barca da 2"
+            barche.add(interpretaIns(input.nextLine()));
+        }
+        
         
     }
     
