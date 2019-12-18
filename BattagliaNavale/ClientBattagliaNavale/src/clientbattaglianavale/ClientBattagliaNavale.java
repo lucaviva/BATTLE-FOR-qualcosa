@@ -6,33 +6,37 @@ import java.io.PrintWriter;
 import java.net.Socket;
 
 public class ClientBattagliaNavale {
-
     
+    Socket socket;
+    Scanner in;
+    PrintWriter out;
     
-    public ClientBattagliaNavale ()  {
-    
-    
+    public ClientBattagliaNavale () throws IOException  {
+        
+        socket = new Socket("127.0.0.1", 42069);
+        in = new Scanner(socket.getInputStream());
+        out = new PrintWriter(socket.getOutputStream(), true);
 }
     
     
-    
-    
-    
-    public static void main(String[] args) throws IOException {
-        
+    private void interpreta() {
      
-  
-        
-        try (Socket socket = new Socket("127.0.0.1", 42069)) {
-            Scanner in = new Scanner(socket.getInputStream());
-            PrintWriter out = new PrintWriter(socket.getOutputStream(), true);
-            while (true) {
-                if(in.hasNextLine()) {
-                System.out.println(in.nextLine());
-                break;
-                }
+        if (in.hasNextLine()) {
+            String testo = in.nextLine();
+            if (testo) {
+                
             }
         }
+    }  
+    
+    private void gioca() {
+        this.interpreta();
+    }
+    
+    public static void main(String[] args) throws IOException {
+       
+        ClientBattagliaNavale client = new ClientBattagliaNavale();
+        client.gioca();
     }
     
 }

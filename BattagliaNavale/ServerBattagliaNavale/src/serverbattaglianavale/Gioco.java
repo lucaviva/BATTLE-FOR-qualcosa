@@ -57,6 +57,7 @@ public class Gioco {
         Barca b = new Barca();
         if(testo != null || testo.length() == 3) {
             //segmento la Stringa in input
+            testo = testo.toLowerCase();
             int x = Character.getNumericValue(testo.charAt(0));
             int y = Character.getNumericValue(testo.charAt(1));
             char orient = testo.charAt(2);
