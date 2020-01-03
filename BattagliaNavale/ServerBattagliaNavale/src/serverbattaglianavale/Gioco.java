@@ -205,6 +205,15 @@ public class Gioco {
          return b;
     }
     
+    private void aggiungiBarcaGriglia (Barca b) {
+        int x;
+        int y;
+        if (b.getOrientamento() == 'o')
+            for(x = b.getInizio().getX(), y = b.getInizio().getY(); x < b.getLunghezza(); x++, y++) {
+                griglia[x][y] = 1;
+            }
+    }
+    
     private void inserisciBarche() {
         Barca temp = new Barca();
         output.println("INSS"); //prefisso INS sta per inserimento, S sta per "inizio inserimento"
@@ -212,20 +221,25 @@ public class Gioco {
         output.println("INS5"); //prefisso INS sta per inserimento, 5 sta per "inserisci barca da 5"
         temp = interpretaIns(input.nextLine());
         } while(controlloIns(temp) == false); //Ripete finche il controllo non va a buon fine
-        
+    
         barche.add(temp);
+        aggiungiBarcaGriglia(temp);
+        
         do{
         output.println("INS4"); //prefisso INS sta per inserimento, 4 sta per "inserisci barca da 4"
         temp = interpretaIns(input.nextLine());
         } while (controlloIns(temp) == false); //Ripete finche il controllo non va a buon fine
         
         barche.add(temp);
+        aggiungiBarcaGriglia(temp);
+        
         for (int i = 0; i < 2; i++) { //ci sono 2 barche da 3
             do {
             output.println("INS3"); //prefisso INS sta per inserimento, 3 sta per "inserisci barca da 3"
             temp = interpretaIns(input.nextLine());
             } while(controlloIns(temp) == false); //Ripete finche il controllo non va a buon fine
             barche.add(temp);
+            aggiungiBarcaGriglia(temp);
         }
         for (int i = 0; i < 3; i++) { //ci sono 3 barche da 2
             do {
@@ -233,6 +247,7 @@ public class Gioco {
             temp = interpretaIns(input.nextLine());
             }while(controlloIns(temp) == false); //Ripete finche il controllo non va a buon fine
             barche.add(temp);
+            aggiungiBarcaGriglia(temp);
         }
         
         
