@@ -292,22 +292,75 @@ public class Gioco {
                 do {
                     output.println("FIRO");
                     temp = interpretaInsCoordinata(input.nextLine());
-                    if (griglia[temp.getX()][temp.getY()] == 0) { //controllo se la casella vale Acqua
+                    if (avversario.griglia[temp.getX()][temp.getY()] == 0) { //controllo se la casella vale Acqua
                         output.println("FIRA");
-                        griglia[temp.getX()][temp.getY()] = 3; //valore di casella Acqua colpita 
+                        avversario.griglia[temp.getX()][temp.getY()] = 3; //valore di casella Acqua colpita 
                         break;
                     }
-                    if (griglia[temp.getX()][temp.getY()] == 1) { //controllo se la casella vale Barca
+                    if (avversario.griglia[temp.getX()][temp.getY()] == 1) { //controllo se la casella vale Barca
                         output.println("FIRC");
-                        griglia[temp.getX()][temp.getY()] = 2; //valore di casella Barca colpita
+                        avversario.griglia[temp.getX()][temp.getY()] = 2; //valore di casella Barca colpita
+                        colpita(temp);
                         break;
                     }
-                    if (griglia[temp.getX()][temp.getY()] == 2 || griglia[temp.getX()][temp.getY()] == 3) { //controllo se la casella vale Colpito
+                    if (avversario.griglia[temp.getX()][temp.getY()] == 2 || avversario.griglia[temp.getX()][temp.getY()] == 3) { //controllo se la casella vale Colpito
                         output.println("FIRR");
                     } 
                 }while (true); //ripete solo nel caso che l'ultimo è vero
               invertiSemaforo();  //inverte il semaforo da un giocatore all'altro  
             }
+            if(vittoria())
+            {
+                output.println("Hai distrutto tutte le barche vittoria!");
+                avversario.output.println("Ti hanno distrutto tutte le barche!");
+                return;
+            }
+        }
+        
+        private void colpita(Coordinata colpo){
+            for (int i = 0; i < avversario.barche.size(); i++) {
+                if(avversario.barche.get(i).getValore() != 0){
+                    if(avversario.barche.get(i).getOrientamento() == 'o'){
+                        for (int j = 0; j < avversario.barche.get(i).getLunghezza(); j++) {
+                            if(colpo == new Coordinata(avversario.barche.get(i).getInizio().getX(), avversario.barche.get(i).getInizio().getY() + j)){
+                                if(avversario.barche.get(i).getValore() == 1){
+                                    output.println("FIRM");
+                                }
+                                avversario.barche.get(i).setValore(avversario.barche.get(i).getValore()-1);
+                                return;
+                            }
+                        }
+
+                    }
+                    if(avversario.barche.get(i).getOrientamento() == 'v'){
+                        for (int j = 0; j < avversario.barche.get(i).getLunghezza(); j++) {
+                            if(colpo == new Coordinata(avversario.barche.get(i).getInizio().getX() + j, avversario.barche.get(i).getInizio().getY())){
+                                if(avversario.barche.get(i).getValore() == 1){
+                                    output.println("FIRM");
+                                }
+                                avversario.barche.get(i).setValore(avversario.barche.get(i).getValore()-1);
+                                return;
+                            }
+                        }
+
+                    }
+                }
+            }
+            
+        }
+        
+        private boolean vittoria(){
+            int distrutte=0;
+            for (int i = 0; i < avversario.barche.size(); i++) {
+                if(avversario.barche.get(i).getValore() == 0){
+                    distrutte++;
+                }
+                if(distrutte == avversario.barche.size()){ 
+                    output.println("WIN");
+                    return true;
+                }
+            }
+            return false;
         }
         
         @Override

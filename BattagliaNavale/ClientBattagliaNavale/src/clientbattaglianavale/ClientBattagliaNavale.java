@@ -33,10 +33,7 @@ public class ClientBattagliaNavale {
                 fuoco(testo.charAt(4));
                 return;
             }
-            if (testo.startsWith("ERR")) {
-                analizzaErrore(testo.charAt(4));
-                return;
-            }
+            
             else
                 System.out.println(testo);
         }
@@ -69,10 +66,6 @@ public class ClientBattagliaNavale {
         }
     } 
     
-    private void analizzaErrore(char ins) {
-        
-    }
-    
     private void fuoco(char ins) {
         if (ins == 'O') {
             System.out.println("Inserire coordinate da colpire (le coordinate vaanno scritte in lettere es: 1 = a, 2 = b, etc..)");
@@ -91,6 +84,8 @@ public class ClientBattagliaNavale {
         if (ins == 'R') {
             System.out.println("Fatto fuoco su una casella già colpita");
         }
+        if(ins == 'M')
+            System.out.println("Complimenti hai distrutto una barca");
     }
     
     private void gioca() {
