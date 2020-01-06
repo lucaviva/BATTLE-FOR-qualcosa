@@ -13,7 +13,10 @@ public class Coordinata {
     private int x;
     private int y;
     
-public Coordinata (int x, int y) {
+    public Coordinata () {
+    }
+
+    public Coordinata (int x, int y) {
     this.x = x;
     this.y = y;
     }

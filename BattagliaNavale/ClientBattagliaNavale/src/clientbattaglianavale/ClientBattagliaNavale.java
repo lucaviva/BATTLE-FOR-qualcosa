@@ -25,8 +25,20 @@ public class ClientBattagliaNavale {
      
         if (in.hasNextLine()) {
             String testo = in.nextLine();
-            if (testo.startsWith("INS"))
+            if (testo.startsWith("INS")) {
                 inserimentoBarca(testo.charAt(4));
+                return;
+            }
+            if (testo.startsWith("FIR")) {
+                fuoco(testo.charAt(4));
+                return;
+            }
+            if (testo.startsWith("ERR")) {
+                analizzaErrore(testo.charAt(4));
+                return;
+            }
+            else
+                System.out.println(testo);
         }
     }  
     
@@ -56,6 +68,30 @@ public class ClientBattagliaNavale {
             out.println(tastiera.nextLine());
         }
     } 
+    
+    private void analizzaErrore(char ins) {
+        
+    }
+    
+    private void fuoco(char ins) {
+        if (ins == 'O') {
+            System.out.println("Inserire coordinate da colpire (le coordinate vaanno scritte in lettere es: 1 = a, 2 = b, etc..)");
+            out.println(tastiera.nextLine());
+        }
+        if (ins == 'E') {
+            System.out.println("Errore nel valore inserito");
+            this.fuoco('O');
+        }
+        if (ins == 'A') {
+            System.out.println("Colpo non andato a segno. Acqua!");
+        }
+        if (ins == 'C') {
+            System.out.println("Colpo andato a segno. Colpito!");
+        }
+        if (ins == 'R') {
+            System.out.println("Fatto fuoco su una casella già colpita");
+        }
+    }
     
     private void gioca() {
         this.interpreta();
