@@ -28,14 +28,14 @@ public class Gioco {
     }
     
     public synchronized  boolean Semaforo (String nomeGiocatore){
-        if (turnoGiocatore == nomeGiocatore)
+        if (turnoGiocatore.equals(nomeGiocatore))
             return true;
         else
             return false;
     }
     
     public synchronized void invertiSemaforo () {
-        if (turnoGiocatore == "giocatore 1")
+        if (turnoGiocatore.equals("giocatore 1"))
             turnoGiocatore = "giocatore 2";
         else
             turnoGiocatore = "giocatore 1";
@@ -294,6 +294,7 @@ public class Gioco {
                     temp = interpretaInsCoordinata(input.nextLine());
                     if (avversario.griglia[temp.getX()][temp.getY()] == 0) { //controllo se la casella vale Acqua
                         output.println("FIRA");
+                        avversario.output.println("COLA" + (temp.getX()+10) + "" + (temp.getY()+10));
                         avversario.griglia[temp.getX()][temp.getY()] = 3; //valore di casella Acqua colpita 
                         break;
                     }
@@ -325,6 +326,7 @@ public class Gioco {
                             if(colpo == new Coordinata(avversario.barche.get(i).getInizio().getX(), avversario.barche.get(i).getInizio().getY() + j)){
                                 if(avversario.barche.get(i).getValore() == 1){
                                     output.println("FIRM");
+                                    avversario.output.println("COLB" + (colpo.getX()+10) + "" + (colpo.getY()+10));
                                 }
                                 avversario.barche.get(i).setValore(avversario.barche.get(i).getValore()-1);
                                 return;
@@ -337,6 +339,7 @@ public class Gioco {
                             if(colpo == new Coordinata(avversario.barche.get(i).getInizio().getX() + j, avversario.barche.get(i).getInizio().getY())){
                                 if(avversario.barche.get(i).getValore() == 1){
                                     output.println("FIRM");
+                                    avversario.output.println("COLB" + (colpo.getX()+10) + "" + (colpo.getY()+10));
                                 }
                                 avversario.barche.get(i).setValore(avversario.barche.get(i).getValore()-1);
                                 return;
@@ -383,7 +386,7 @@ public class Gioco {
             output = new PrintWriter(socket.getOutputStream(), true);
             output.println("Benvenuto " + nome);
             initGriglia();
-            if (nome == "giocatore 1") { //controlla se è il primo giocatore a connettersi
+            if (nome.equals("giocatore 1")) { //controlla se è il primo giocatore a connettersi
                 giocatoreAttuale = this;
                 output.println("In attesa del secondo giocatore");
             }

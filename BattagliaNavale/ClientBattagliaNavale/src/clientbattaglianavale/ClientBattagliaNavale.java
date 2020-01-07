@@ -23,23 +23,27 @@ public class ClientBattagliaNavale {
     
     
     private void interpreta() {
-     
-        if (in.hasNextLine()) {
-            String testo = in.nextLine();
-            if (testo.startsWith("INS")) {
-                inserimentoBarca(testo.charAt(4));
-                return;
-            }
-            if (testo.startsWith("FIR")) {
-                fuoco(testo.charAt(4));
-                return;
-            }
-            if (testo.startsWith("WIN") || testo.startsWith("LOS")) {
-                finePartita = true;
-            }
-            else
-                System.out.println(testo);
+
+        String testo = in.nextLine();
+        if (testo.startsWith("INS")) {
+            inserimentoBarca(testo.charAt(4));
+            return;
         }
+        if (testo.startsWith("FIR")) {
+            fuoco(testo.charAt(4));
+            return;
+        }
+        if (testo.startsWith("WIN") || testo.startsWith("LOS")) {
+            finePartita = true;
+            return;
+        }
+        if (testo.startsWith("COL")) {
+            colpoRicevuto(testo);
+            return;
+        }
+        else
+            System.out.println(testo);
+        
     }  
     
     private void inserimentoBarca(char ins) {
@@ -91,9 +95,20 @@ public class ClientBattagliaNavale {
             System.out.println("Complimenti hai distrutto una barca");
     }
     
+    private void colpoRicevuto(String ins) {
+        if (ins.charAt(4) == 'B') {
+            System.out.println("Una tua barca e' stata colpita in x: " + (Integer.valueOf(ins.substring(5, 6))-10) + " y:" + (Integer.valueOf(ins.substring(7, 8))-10));
+        }
+        if (ins.charAt(4) == 'A') {
+            System.out.println("L'avversario ha colpitol'acqua in x: " + (Integer.valueOf(ins.substring(5, 6))-10) + " y:" + (Integer.valueOf(ins.substring(7, 8))-10));
+        }
+    }
+    
     private void gioca() {
         do {
-            this.interpreta();
+            if (in.hasNextLine()) {
+                this.interpreta();
+            }
         } while (finePartita);
     }
     
