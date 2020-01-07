@@ -357,6 +357,7 @@ public class Gioco {
                 }
                 if(distrutte == avversario.barche.size()){ 
                     output.println("WIN");
+                    avversario.output.println("LOS");
                     return true;
                 }
             }

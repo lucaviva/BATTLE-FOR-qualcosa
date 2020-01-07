@@ -11,6 +11,7 @@ public class ClientBattagliaNavale {
     Scanner in;
     Scanner tastiera;
     PrintWriter out;
+    Boolean finePartita = false;
     
     public ClientBattagliaNavale () throws IOException  {
         
@@ -33,7 +34,9 @@ public class ClientBattagliaNavale {
                 fuoco(testo.charAt(4));
                 return;
             }
-            
+            if (testo.startsWith("WIN") || testo.startsWith("LOS")) {
+                finePartita = true;
+            }
             else
                 System.out.println(testo);
         }
@@ -89,7 +92,9 @@ public class ClientBattagliaNavale {
     }
     
     private void gioca() {
-        this.interpreta();
+        do {
+            this.interpreta();
+        } while (finePartita);
     }
     
     public static void main(String[] args) throws IOException {
