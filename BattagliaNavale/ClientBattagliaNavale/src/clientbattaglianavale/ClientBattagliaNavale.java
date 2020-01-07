@@ -109,7 +109,7 @@ public class ClientBattagliaNavale {
             if (in.hasNextLine()) {
                 this.interpreta();
             }
-        } while (finePartita);
+        } while (!finePartita);
     }
     
     public static void main(String[] args) throws IOException {
