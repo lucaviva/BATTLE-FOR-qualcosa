@@ -21,7 +21,7 @@ import java.util.concurrent.Executors;
 public class Gioco {
 
     Giocatore giocatoreAttuale;
-    String turnoGiocatore = "giocatore 1";
+    String turnoGiocatore = "giocatore 2";
     
     public Gioco() {
 
@@ -41,8 +41,7 @@ public class Gioco {
             turnoGiocatore = "giocatore 1";
     }
     
-    class Giocatore implements Runnable 
-    {
+    class Giocatore implements Runnable {
         Giocatore avversario;
         Scanner input;
         PrintWriter output;
@@ -208,7 +207,7 @@ public class Gioco {
              return c;
         }
 
-        private Barca interpretaInsBarca(String testo) {
+        private Barca interpretaInsBarca(String testo, int lunghezza) {
             Barca b = new Barca();
             if(testo != null || testo.length() == 3) {
                 //segmento la Stringa in input
@@ -216,16 +215,17 @@ public class Gioco {
                 int x = Character.getNumericValue(testo.charAt(0));
                 int y = Character.getNumericValue(testo.charAt(1));
                 char orient = testo.charAt(2);
+                b.setLunghezza(lunghezza);
                 if ( x >= 10 && x <= 30 ){ //controllo che il valore di x sia una lettera dell'alfabeto. a = 0 -> u = 21
                     if ( y >= 10 && y <= 30 ) //controllo che il valore di y sia una lettera dell'alfabeto. a = 0 -> u = 21
                         if (orient == 'o' || orient == 'v') //controllo che orient sia o (orizzontale) oopure v (verticale)
                         {
-                            b.setInizio(new Coordinata(Character.getNumericValue(x) - 10, Character.getNumericValue(y) - 10));
+                            b.setInizio(new Coordinata(x - 10, y - 10));
                             b.setOrientamento(orient);
                             if (orient == 'o') //calcolo la coordinata di fine della barca
-                                b.setFine(new Coordinata(Character.getNumericValue(x) - 10 + b.getLunghezza(), Character.getNumericValue(y) - 10));
+                                b.setFine(new Coordinata(x - 10 + b.getLunghezza(), y - 10));
                             else
-                                b.setFine(new Coordinata(Character.getNumericValue(x) - 10, Character.getNumericValue(y) - 10 + b.getLunghezza()));
+                                b.setFine(new Coordinata(x - 10, y - 10 + b.getLunghezza()));
                         }
                     else
                         output.println("INSE"); //prefisso INS sta per inserimento, E sta per "errore nell'inserimento"
@@ -241,26 +241,41 @@ public class Gioco {
             int x;
             int y;
             if (b.getOrientamento() == 'o')
-                for(x = b.getInizio().getX(), y = b.getInizio().getY(); x < b.getLunghezza(); x++, y++) { //porta ad 1 le caselle occupate dalla barca (significa che la casella è occupata da un pezzo di una barca)
+                for(x = b.getInizio().getX(), y = b.getInizio().getY(); x < b.getLunghezza(); x++) { //porta ad 1 le caselle occupate dalla barca (significa che la casella è occupata da un pezzo di una barca)
                     griglia[x][y] = 1;
                 }
         }
 
+        private void stampaGriglia () {
+            String temp = "GRI";
+            for (int i = 0; i < 21; i++) {
+                for (int j = 0; j < 21; j++) {
+                    temp += griglia[j][i];
+                    temp += "-";
+                }
+                temp += "\n";
+            }
+            output.println(temp);
+        }
+        
         private void inserisciBarche() {
-            while (!Semaforo(this.nome)) {} //cicla finche non è il turno del giocatore
+            while (!(Semaforo(this.nome))) {} //cicla finche non è il turno del giocatore
             Barca temp = new Barca();
+            
             output.println("INSS"); //prefisso INS sta per inserimento, S sta per "inizio inserimento"
             do {
-            output.println("INS5"); //prefisso INS sta per inserimento, 5 sta per "inserisci barca da 5"
-            temp = interpretaInsBarca(input.nextLine());
+                stampaGriglia();
+                output.println("INS5"); //prefisso INS sta per inserimento, 5 sta per "inserisci barca da 5"
+                temp = interpretaInsBarca(input.nextLine(), 5);
             } while(controlloIns(temp) == false); //Ripete finche il controllo non va a buon fine
 
             barche.add(temp);
             aggiungiBarcaGriglia(temp);
 
             do{
-            output.println("INS4"); //prefisso INS sta per inserimento, 4 sta per "inserisci barca da 4"
-            temp = interpretaInsBarca(input.nextLine());
+                stampaGriglia();
+                output.println("INS4"); //prefisso INS sta per inserimento, 4 sta per "inserisci barca da 4"
+                temp = interpretaInsBarca(input.nextLine(), 4);
             } while (controlloIns(temp) == false); //Ripete finche il controllo non va a buon fine
 
             barche.add(temp);
@@ -268,16 +283,18 @@ public class Gioco {
 
             for (int i = 0; i < 2; i++) { //ci sono 2 barche da 3
                 do {
-                output.println("INS3"); //prefisso INS sta per inserimento, 3 sta per "inserisci barca da 3"
-                temp = interpretaInsBarca(input.nextLine());
+                    stampaGriglia();
+                    output.println("INS3"); //prefisso INS sta per inserimento, 3 sta per "inserisci barca da 3"
+                    temp = interpretaInsBarca(input.nextLine(), 3);
                 } while(controlloIns(temp) == false); //Ripete finche il controllo non va a buon fine
                 barche.add(temp);
                 aggiungiBarcaGriglia(temp);
             }
             for (int i = 0; i < 3; i++) { //ci sono 3 barche da 2
                 do {
-                output.println("INS2"); //prefisso INS sta per inserimento, 2 sta per "inserisci barca da 2"
-                temp = interpretaInsBarca(input.nextLine());
+                    stampaGriglia();
+                    output.println("INS2"); //prefisso INS sta per inserimento, 2 sta per "inserisci barca da 2"
+                    temp = interpretaInsBarca(input.nextLine(), 2);
                 } while(controlloIns(temp) == false); //Ripete finche il controllo non va a buon fine
                 barche.add(temp);
                 aggiungiBarcaGriglia(temp);

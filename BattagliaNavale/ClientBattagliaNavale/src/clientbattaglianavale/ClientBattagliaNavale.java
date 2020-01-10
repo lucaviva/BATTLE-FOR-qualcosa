@@ -26,11 +26,11 @@ public class ClientBattagliaNavale {
 
         String testo = in.nextLine();
         if (testo.startsWith("INS")) {
-            inserimentoBarca(testo.charAt(4));
+            inserimentoBarca(testo.charAt(3));
             return;
         }
         if (testo.startsWith("FIR")) {
-            fuoco(testo.charAt(4));
+            fuoco(testo.charAt(3));
             return;
         }
         if (testo.startsWith("WIN") || testo.startsWith("LOS")) {
@@ -40,6 +40,9 @@ public class ClientBattagliaNavale {
         if (testo.startsWith("COL")) {
             colpoRicevuto(testo);
             return;
+        }
+        if (testo.startsWith("GRI")) {
+            System.out.println(testo.substring(3));
         }
         else
             System.out.println(testo);
@@ -96,10 +99,10 @@ public class ClientBattagliaNavale {
     }
     
     private void colpoRicevuto(String ins) {
-        if (ins.charAt(4) == 'B') {
+        if (ins.charAt(3) == 'B') {
             System.out.println("Una tua barca e' stata colpita in x: " + (Integer.valueOf(ins.substring(5, 6))-10) + " y:" + (Integer.valueOf(ins.substring(7, 8))-10));
         }
-        if (ins.charAt(4) == 'A') {
+        if (ins.charAt(3) == 'A') {
             System.out.println("L'avversario ha colpitol'acqua in x: " + (Integer.valueOf(ins.substring(5, 6))-10) + " y:" + (Integer.valueOf(ins.substring(7, 8))-10));
         }
     }
