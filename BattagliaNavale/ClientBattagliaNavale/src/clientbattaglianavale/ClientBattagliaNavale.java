@@ -13,13 +13,14 @@ public class ClientBattagliaNavale {
     PrintWriter out;
     Boolean finePartita = false;
     
-    public ClientBattagliaNavale () throws IOException  {
+    public ClientBattagliaNavale (String ip, int porta) throws IOException  {
         
-        socket = new Socket("127.0.0.1", 42069);
+        socket = new Socket(ip, porta);
+        
         tastiera = new Scanner(System.in);
         in = new Scanner(socket.getInputStream());
         out = new PrintWriter(socket.getOutputStream(), true);
-}
+    }
     
     
     private void interpreta() {
@@ -51,12 +52,11 @@ public class ClientBattagliaNavale {
     
     private void inserimentoBarca(char ins) {
         if (ins == 'S') {
-            System.out.println("Inserire coordinate e orientamento barca dell'inizio della barca(se orizzontale si estende a destra e in verticale verso il basso)(le coordinate vaanno scritte in lettere es: 1 = a, 2 = b, etc..) es. barca gto (x = g = 7, y = t = 20, o = orizzontale)");
+            System.out.println("Inserire coordinate e orientamento barca dell'inizio della barca(se orizzontale si estende a destra e in verticale verso il basso)(le coordinate vaanno scritte in lettere es: 1 = a, 2 = b ... 21 = u) es. barca gto (x = g = 7, y = t = 20, o = orizzontale)");
    
         }
         if (ins == 'E') {
             System.out.println("Errore nel valore inserito");
-            this.inserimentoBarca('S');
         }
         if (ins == '5') {
             System.out.println("Inserire barca da 5 caselle");
@@ -108,17 +108,33 @@ public class ClientBattagliaNavale {
     }
     
     private void gioca() {
+        int valore;
+        String statoConnesione;
+        
         do {
+            valore = in.toString().indexOf("source closed=");
+            statoConnesione =in.toString().substring(valore + 14, valore + 19);
+            if (!statoConnesione.equals("false")) {
+                System.out.println("Server disconnesso");
+                return;
+            }
             if (in.hasNextLine()) {
                 this.interpreta();
             }
-        } while (!finePartita);
+        } while (!finePartita );
     }
     
     public static void main(String[] args) throws IOException {
-       
-        ClientBattagliaNavale client = new ClientBattagliaNavale();
+        int porta;
+        String ip;
+        Scanner input = new Scanner(System.in);
+        System.out.println("Inserire l'indirizzo ip con il quale creare si vuole creare connessione: ");
+        ip = input.nextLine();
+        System.out.println("Inserire porta con la quale si vuole creare la connessione: ");
+        porta = input.nextInt();
+        ClientBattagliaNavale client = new ClientBattagliaNavale(ip, porta);
         client.gioca();
+        
     }
     
 }

@@ -67,9 +67,7 @@ public class Gioco {
             }
         }
 
-        private boolean controlloIns(Barca barca) {
-            if (barche.isEmpty())
-                return true; //true equivale a inserimento corretto
+        private boolean controlloIns(Barca barca) { //se ritorna true l'inserimento è andato a buon fine
             int x = barca.getInizio().getX();
             int y = barca.getInizio().getY();
 
@@ -84,9 +82,7 @@ public class Gioco {
                 else
                     y++;
             }
-
-
-            if (x == 20 && y == 0) { //angolo Alto-Destra
+            else if (x == 20 && y == 0) { //angolo Alto-Destra
                 if (griglia[x][y] == 1
                     || griglia[x - 1][y] == 1
                     || griglia[x - 1][y + 1] == 1
@@ -94,8 +90,7 @@ public class Gioco {
                     return false;
                 y++;
             }
-
-            if (x == 0 && y == 20) { //angolo Basso-Sinistra
+            else if (x == 0 && y == 20) { //angolo Basso-Sinistra
                 if (griglia[x][y] == 1
                     || griglia[x][y - 1] == 1
                     || griglia[x + 1][y - 1] == 1
@@ -103,9 +98,55 @@ public class Gioco {
                     return false;
                 x++;
             }
-
-
-            if (x == barca.getInizio().getX() && y == barca.getInizio().getY()) { //controllo inizio generico
+            else if ( x == 0) { //controllo inizio sul bordo alto
+                if (griglia[x][y] == 1 
+                    || griglia[x + 1][y + 1] == 1
+                    || griglia[x + 1][y] == 1
+                    || griglia[x][y + 1] == 1
+                    || griglia[x][y - 1] == 1)
+                    return false;
+                if (barca.getOrientamento() == 'o')
+                    x++;
+                else
+                    y++;
+            }
+            else if (y == 0) { //controllo inizio sul sinistro
+                if (griglia[x][y] == 1 
+                    || griglia[x + 1][y + 1] == 1
+                    || griglia[x + 1][y] == 1
+                    || griglia[x][y + 1] == 1
+                    || griglia[x - 1][y] == 1)
+                    return false;
+                if (barca.getOrientamento() == 'o')
+                    x++;
+                else
+                    y++;
+            }
+            else if (x == 20) { //controllo inizio sul bordo basso
+                if (griglia[x][y] == 1 
+                    || griglia[x - 1][y - 1] == 1
+                    || griglia[x][y + 1] == 1
+                    || griglia[x - 1][y] == 1
+                    || griglia[x][y - 1] == 1)
+                    return false;
+                if (barca.getOrientamento() == 'o')
+                    x++;
+                else
+                    y++;
+            }
+            else if (y == 20) { //controllo inizio sul bordo destro
+                if (griglia[x][y] == 1 
+                    || griglia[x - 1][y - 1] == 1
+                    || griglia[x + 1][y] == 1
+                    || griglia[x - 1][y] == 1
+                    || griglia[x][y - 1] == 1)
+                    return false;
+                if (barca.getOrientamento() == 'o')
+                    x++;
+                else
+                    y++;
+            }
+            else { //controllo inizio generico
                 if (griglia[x][y] == 1 
                     || griglia[x + 1][y + 1] == 1
                     || griglia[x - 1][y - 1] == 1
@@ -119,7 +160,7 @@ public class Gioco {
                 else
                     y++;
             }
-
+            
             if (barca.getOrientamento() == 'o') { //ciclo per barche orizzontali
                 while ( x <= barca.getFine().getX()) {
                     if (x == 20 && y == 20) { //angolo Basso-Destra
@@ -129,21 +170,53 @@ public class Gioco {
                             || griglia[x][y - 1] == 1)
                             return false;
                     }
-                    if (x == 20 && y == 0) { //angolo Alto-Destra
+                    else if (x == 20 && y == 0) { //angolo Alto-Destra
                         if (griglia[x][y] == 1
                             || griglia[x - 1][y] == 1
                             || griglia[x - 1][y + 1] == 1
                             || griglia[x][y + 1] == 1)
                             return false;
                     }
-                    if (x == 0 && y == 20) { //angolo Basso-Sinistra
+                    else if (x == 0 && y == 20) { //angolo Basso-Sinistra
                         if (griglia[x][y] == 1
                             || griglia[x][y - 1] == 1
                             || griglia[x + 1][y - 1] == 1
                             || griglia[x + 1][y] == 1)
                             return false;
                     }
-                    if (griglia[x][y] == 1
+                    else if (x == 0) { // bordo alto
+                        if (griglia[x][y] == 1
+                        || griglia[x + 1][y + 1] == 1
+                        || griglia[x + 1][y] == 1
+                        || griglia[x][y + 1] == 1
+                        || griglia[x][y - 1] == 1)
+                        return false;
+                    }
+                    else if (y == 0) { // bordo sinistro
+                        if (griglia[x][y] == 1
+                        || griglia[x + 1][y + 1] == 1
+                        || griglia[x + 1][y] == 1
+                        || griglia[x][y + 1] == 1
+                        || griglia[x - 1][y] == 1)
+                        return false;
+                    }
+                    else if (x == 20) { // bordo basso
+                        if (griglia[x][y] == 1
+                        || griglia[x - 1][y - 1] == 1
+                        || griglia[x][y + 1] == 1
+                        || griglia[x - 1][y] == 1
+                        || griglia[x][y - 1] == 1)
+                        return false;
+                    }
+                    else if (y == 20) { // bordo destro
+                        if (griglia[x][y] == 1
+                        || griglia[x - 1][y - 1] == 1
+                        || griglia[x + 1][y] == 1
+                        || griglia[x - 1][y] == 1
+                        || griglia[x][y - 1] == 1)
+                        return false;
+                    }
+                    else if (griglia[x][y] == 1 //generico
                         || griglia[x + 1][y + 1] == 1
                         || griglia[x - 1][y - 1] == 1
                         || griglia[x + 1][y] == 1
@@ -162,21 +235,53 @@ public class Gioco {
                             || griglia[x][y - 1] == 1)
                             return false;
                     }
-                    if (x == 20 && y == 0) { //angolo Alto-Destra
+                    else if (x == 20 && y == 0) { //angolo Alto-Destra
                         if (griglia[x][y] == 1
                             || griglia[x - 1][y] == 1
                             || griglia[x - 1][y + 1] == 1
                             || griglia[x][y + 1] == 1)
                             return false;
                     }
-                    if (x == 0 && y == 20) { //angolo Basso-Sinistra
+                    else if (x == 0 && y == 20) { //angolo Basso-Sinistra
                         if (griglia[x][y] == 1
                             || griglia[x][y - 1] == 1
                             || griglia[x + 1][y - 1] == 1
                             || griglia[x + 1][y] == 1)
                             return false;
                     }
-                    if (griglia[x][y] == 1
+                    else if (x == 0) { // bordo alto
+                        if (griglia[x][y] == 1
+                        || griglia[x + 1][y + 1] == 1
+                        || griglia[x + 1][y] == 1
+                        || griglia[x][y + 1] == 1
+                        || griglia[x][y - 1] == 1)
+                        return false;
+                    }
+                    else if (y == 0) { // bordo sinistro
+                        if (griglia[x][y] == 1
+                        || griglia[x + 1][y + 1] == 1
+                        || griglia[x + 1][y] == 1
+                        || griglia[x][y + 1] == 1
+                        || griglia[x - 1][y] == 1)
+                        return false;
+                    }
+                    else if (x == 20) { // bordo basso
+                        if (griglia[x][y] == 1
+                        || griglia[x - 1][y - 1] == 1
+                        || griglia[x][y + 1] == 1
+                        || griglia[x - 1][y] == 1
+                        || griglia[x][y - 1] == 1)
+                        return false;
+                    }
+                    else if (y == 20) { // bordo destro
+                        if (griglia[x][y] == 1
+                        || griglia[x - 1][y - 1] == 1
+                        || griglia[x + 1][y] == 1
+                        || griglia[x - 1][y] == 1
+                        || griglia[x][y - 1] == 1)
+                        return false;
+                    }
+                    else if (griglia[x][y] == 1 //generico
                         || griglia[x + 1][y + 1] == 1
                         || griglia[x - 1][y - 1] == 1
                         || griglia[x + 1][y] == 1
@@ -216,8 +321,8 @@ public class Gioco {
                 int y = Character.getNumericValue(testo.charAt(1));
                 char orient = testo.charAt(2);
                 b.setLunghezza(lunghezza);
-                if ( x >= 10 && x <= 30 ){ //controllo che il valore di x sia una lettera dell'alfabeto. a = 0 -> u = 21
-                    if ( y >= 10 && y <= 30 ) //controllo che il valore di y sia una lettera dell'alfabeto. a = 0 -> u = 21
+                if ( x >= 10 && x <= 30 ){ //controllo che il valore di x sia una lettera dell'alfabeto. a = 0 -> u = 20
+                    if ( y >= 10 && y <= 30 ) //controllo che il valore di y sia una lettera dell'alfabeto. a = 0 -> u = 20
                         if (orient == 'o' || orient == 'v') //controllo che orient sia o (orizzontale) oopure v (verticale)
                         {
                             b.setInizio(new Coordinata(x - 10, y - 10));
@@ -226,13 +331,23 @@ public class Gioco {
                                 b.setFine(new Coordinata(x - 10 + b.getLunghezza(), y - 10));
                             else
                                 b.setFine(new Coordinata(x - 10, y - 10 + b.getLunghezza()));
+                            if (b.getFine().getX() > 20 || b.getFine().getY() > 20) {
+                                output.println("INSE"); //prefisso INS sta per inserimento, E sta per "errore nell'inserimento"
+                                return null;
+                            }
                         }
-                    else
+                        else {
                         output.println("INSE"); //prefisso INS sta per inserimento, E sta per "errore nell'inserimento"
-                    else
+                        return null;
+                    }
+                    else {
                         output.println("INSE"); //prefisso INS sta per inserimento, E sta per "errore nell'inserimento"
-                }   else
+                        return null;
+                    }
+                }   else {
                         output.println("INSE"); //prefisso INS sta per inserimento, E sta per "errore nell'inserimento"
+                        return null;
+                    }
             }
              return b;
         }
@@ -242,6 +357,10 @@ public class Gioco {
             int y;
             if (b.getOrientamento() == 'o')
                 for(x = b.getInizio().getX(), y = b.getInizio().getY(); x < b.getLunghezza(); x++) { //porta ad 1 le caselle occupate dalla barca (significa che la casella è occupata da un pezzo di una barca)
+                    griglia[x][y] = 1;
+                }
+            if (b.getOrientamento() == 'v')
+                for(x = b.getInizio().getX(), y = b.getInizio().getY(); y < b.getLunghezza(); y++) { //porta ad 1 le caselle occupate dalla barca (significa che la casella è occupata da un pezzo di una barca)
                     griglia[x][y] = 1;
                 }
         }
@@ -261,13 +380,19 @@ public class Gioco {
         private void inserisciBarche() {
             while (!(Semaforo(this.nome))) {} //cicla finche non è il turno del giocatore
             Barca temp = new Barca();
+            Boolean controlloIns = false;
             
             output.println("INSS"); //prefisso INS sta per inserimento, S sta per "inizio inserimento"
             do {
                 stampaGriglia();
                 output.println("INS5"); //prefisso INS sta per inserimento, 5 sta per "inserisci barca da 5"
                 temp = interpretaInsBarca(input.nextLine(), 5);
-            } while(controlloIns(temp) == false); //Ripete finche il controllo non va a buon fine
+                if (temp != null) {
+                    controlloIns = controlloIns(temp);
+                    if (controlloIns == false)
+                        output.println("Inserimento barca errato");
+                }
+            } while(controlloIns == false); //Ripete finche il controllo non va a buon fine
 
             barche.add(temp);
             aggiungiBarcaGriglia(temp);
@@ -276,7 +401,12 @@ public class Gioco {
                 stampaGriglia();
                 output.println("INS4"); //prefisso INS sta per inserimento, 4 sta per "inserisci barca da 4"
                 temp = interpretaInsBarca(input.nextLine(), 4);
-            } while (controlloIns(temp) == false); //Ripete finche il controllo non va a buon fine
+                if (temp != null) {
+                    controlloIns = controlloIns(temp);
+                    if (controlloIns == false)
+                        output.println("Inserimento barca errato");
+                }
+            } while(controlloIns == false); //Ripete finche il controllo non va a buon fine
 
             barche.add(temp);
             aggiungiBarcaGriglia(temp);
@@ -286,7 +416,12 @@ public class Gioco {
                     stampaGriglia();
                     output.println("INS3"); //prefisso INS sta per inserimento, 3 sta per "inserisci barca da 3"
                     temp = interpretaInsBarca(input.nextLine(), 3);
-                } while(controlloIns(temp) == false); //Ripete finche il controllo non va a buon fine
+                    if (temp != null) {
+                    controlloIns = controlloIns(temp);
+                    if (controlloIns == false)
+                        output.println("Inserimento barca errato");
+                    }
+                } while(controlloIns == false); //Ripete finche il controllo non va a buon fine
                 barche.add(temp);
                 aggiungiBarcaGriglia(temp);
             }
@@ -295,7 +430,12 @@ public class Gioco {
                     stampaGriglia();
                     output.println("INS2"); //prefisso INS sta per inserimento, 2 sta per "inserisci barca da 2"
                     temp = interpretaInsBarca(input.nextLine(), 2);
-                } while(controlloIns(temp) == false); //Ripete finche il controllo non va a buon fine
+                    if (temp != null) {
+                    controlloIns = controlloIns(temp);
+                    if (controlloIns == false)
+                        output.println("Inserimento barca errato");
+                    }
+                } while(controlloIns == false); //Ripete finche il controllo non va a buon fine
                 barche.add(temp);
                 aggiungiBarcaGriglia(temp);
             }
