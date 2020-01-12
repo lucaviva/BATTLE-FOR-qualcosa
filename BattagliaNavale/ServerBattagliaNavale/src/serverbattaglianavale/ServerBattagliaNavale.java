@@ -10,12 +10,14 @@ import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.Scanner;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ExecutorService;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import serverbattaglianavale.Gioco.Giocatore;
 
 /**
  *
@@ -23,24 +25,22 @@ import javax.swing.JLabel;
  */
 public class ServerBattagliaNavale {
 
-    
-    
+
     
     public static void main(String[] args) throws Exception{
         System.out.println("Inserire porta con la quale creare la connessione: ");
         Scanner input = new Scanner(System.in);
         int porta ;
-        porta = input.nextInt();
+        porta = input.nextInt();    
         try(ServerSocket listener = new ServerSocket(porta)) {
             System.out.println("Il server e' attivo");
             ExecutorService pool = Executors.newFixedThreadPool(200);
+            Gioco game = new Gioco();
+            Giocatore g1 = game.new Giocatore(listener.accept(), "giocatore 1");
+            pool.execute(g1);
+            Giocatore g2 = game.new Giocatore(listener.accept(), "giocatore 2");
+            pool.execute(g2);
             
-            
-            while(true) {
-                Gioco game = new Gioco();
-                pool.execute(game.new Giocatore(listener.accept(), "giocatore 1"));
-                pool.execute(game.new Giocatore(listener.accept(), "giocatore 2"));
-            }
 
         }
            

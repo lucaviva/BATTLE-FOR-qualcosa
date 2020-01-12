@@ -26,23 +26,30 @@ public class ClientBattagliaNavale {
     private void interpreta() {
 
         String testo = in.nextLine();
-        if (testo.startsWith("INS")) {
+        if (testo.startsWith("G2M")) {
+            System.out.println("In attesa del secondo giocatore");
+        }
+        else if (testo.startsWith("G2C")) {
+            System.out.println("Giocatore 2 collegato");
+            out.println("G1P");
+        }
+        else if (testo.startsWith("INS")) {
             inserimentoBarca(testo.charAt(3));
             return;
         }
-        if (testo.startsWith("FIR")) {
+        else if (testo.startsWith("FIR")) {
             fuoco(testo.charAt(3));
             return;
         }
-        if (testo.startsWith("WIN") || testo.startsWith("LOS")) {
+        else if (testo.startsWith("WIN") || testo.startsWith("LOS")) {
             finePartita = true;
             return;
         }
-        if (testo.startsWith("COL")) {
+        else if (testo.startsWith("COL")) {
             colpoRicevuto(testo);
             return;
         }
-        if (testo.startsWith("GRI")) {
+        else if (testo.startsWith("GRI")) {
             System.out.println(testo.substring(3));
         }
         else
@@ -56,23 +63,26 @@ public class ClientBattagliaNavale {
    
         }
         if (ins == 'E') {
-            System.out.println("Errore nel valore inserito");
+            System.out.println("Errore nel valore inserito \n");
         }
-        if (ins == '5') {
+        else if (ins == '5') {
             System.out.println("Inserire barca da 5 caselle");
             out.println(tastiera.nextLine());
         }
-        if (ins == '4') {
+        else if (ins == '4') {
             System.out.println("Inserire barca da 4 caselle");
             out.println(tastiera.nextLine());
         }
-        if (ins == '3') {
+        else if (ins == '3') {
             System.out.println("Inserire barca da 3 caselle");
             out.println(tastiera.nextLine());
         }
-        if (ins == '2') {
+        else if (ins == '2') {
             System.out.println("Inserire barca da 2 caselle");
             out.println(tastiera.nextLine());
+        }
+        else if (ins == 'F') {
+            System.out.println("Inserimento completato, in attesa dell'altro giocatore");
         }
     } 
     
@@ -81,20 +91,20 @@ public class ClientBattagliaNavale {
             System.out.println("Inserire coordinate da colpire (le coordinate vaanno scritte in lettere es: 1 = a, 2 = b, etc..)");
             out.println(tastiera.nextLine());
         }
-        if (ins == 'E') {
-            System.out.println("Errore nel valore inserito");
+        else if (ins == 'E') {
+            System.out.println("Errore nel valore inserito \n");
             this.fuoco('O');
         }
-        if (ins == 'A') {
+        else if (ins == 'A') {
             System.out.println("Colpo non andato a segno. Acqua!");
         }
-        if (ins == 'C') {
+        else if (ins == 'C') {
             System.out.println("Colpo andato a segno. Colpito!");
         }
-        if (ins == 'R') {
+        else if (ins == 'R') {
             System.out.println("Fatto fuoco su una casella già colpita");
         }
-        if(ins == 'M')
+        else if(ins == 'M')
             System.out.println("Complimenti hai distrutto una barca");
     }
     
@@ -102,7 +112,7 @@ public class ClientBattagliaNavale {
         if (ins.charAt(3) == 'B') {
             System.out.println("Una tua barca e' stata colpita in x: " + (Integer.valueOf(ins.substring(5, 6))-10) + " y:" + (Integer.valueOf(ins.substring(7, 8))-10));
         }
-        if (ins.charAt(3) == 'A') {
+        else if (ins.charAt(3) == 'A') {
             System.out.println("L'avversario ha colpitol'acqua in x: " + (Integer.valueOf(ins.substring(5, 6))-10) + " y:" + (Integer.valueOf(ins.substring(7, 8))-10));
         }
     }

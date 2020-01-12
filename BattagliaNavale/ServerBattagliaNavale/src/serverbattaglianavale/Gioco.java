@@ -21,24 +21,43 @@ import java.util.concurrent.Executors;
 public class Gioco {
 
     Giocatore giocatoreAttuale;
-    String turnoGiocatore = "giocatore 2";
+    
     
     public Gioco() {
 
     }
     
+    public void stampa (String stampa) {
+        System.out.println(stampa);
+    }
+
+    public synchronized Giocatore getGiocatoreAttuale() {
+        return giocatoreAttuale;
+    }
+
+    public synchronized void setGiocatoreAttuale(Giocatore giocatoreAttuale) {
+        this.giocatoreAttuale = giocatoreAttuale;
+    }
+    
+    
+    
     public synchronized  boolean Semaforo (String nomeGiocatore){
-        if (turnoGiocatore.equals(nomeGiocatore))
+        if (giocatoreAttuale.nome.equals(nomeGiocatore))
             return true;
-        else
+        else {
+            notifyAll();
             return false;
+        }
     }
     
     public synchronized void invertiSemaforo () {
-        if (turnoGiocatore.equals("giocatore 1"))
-            turnoGiocatore = "giocatore 2";
-        else
-            turnoGiocatore = "giocatore 1";
+        giocatoreAttuale = giocatoreAttuale.avversario;
+        
+        notifyAll();
+    }
+    
+    public synchronized void aspettaTurno(String nome) throws InterruptedException{
+        while (!(Semaforo(nome))) { wait();} //cicla finche non è il turno del giocatore
     }
     
     class Giocatore implements Runnable {
@@ -314,7 +333,7 @@ public class Gioco {
 
         private Barca interpretaInsBarca(String testo, int lunghezza) {
             Barca b = new Barca();
-            if(testo != null || testo.length() == 3) {
+            if(testo != null && testo.length() == 3) {
                 //segmento la Stringa in input
                 testo = testo.toLowerCase();
                 int x = Character.getNumericValue(testo.charAt(0));
@@ -348,7 +367,10 @@ public class Gioco {
                         output.println("INSE"); //prefisso INS sta per inserimento, E sta per "errore nell'inserimento"
                         return null;
                     }
-            }
+            } else {
+                        output.println("INSE"); //prefisso INS sta per inserimento, E sta per "errore nell'inserimento"
+                        return null;
+                    }
              return b;
         }
 
@@ -356,11 +378,11 @@ public class Gioco {
             int x;
             int y;
             if (b.getOrientamento() == 'o')
-                for(x = b.getInizio().getX(), y = b.getInizio().getY(); x < b.getLunghezza(); x++) { //porta ad 1 le caselle occupate dalla barca (significa che la casella è occupata da un pezzo di una barca)
+                for(x = b.getInizio().getX(), y = b.getInizio().getY(); x < b.getFine().getX(); x++) { //porta ad 1 le caselle occupate dalla barca (significa che la casella è occupata da un pezzo di una barca)
                     griglia[x][y] = 1;
                 }
             if (b.getOrientamento() == 'v')
-                for(x = b.getInizio().getX(), y = b.getInizio().getY(); y < b.getLunghezza(); y++) { //porta ad 1 le caselle occupate dalla barca (significa che la casella è occupata da un pezzo di una barca)
+                for(x = b.getInizio().getX(), y = b.getInizio().getY(); y < b.getFine().getY(); y++) { //porta ad 1 le caselle occupate dalla barca (significa che la casella è occupata da un pezzo di una barca)
                     griglia[x][y] = 1;
                 }
         }
@@ -377,8 +399,8 @@ public class Gioco {
             output.println(temp);
         }
         
-        private void inserisciBarche() {
-            while (!(Semaforo(this.nome))) {} //cicla finche non è il turno del giocatore
+        private void inserisciBarche() throws InterruptedException{
+            aspettaTurno(this.nome);
             Barca temp = new Barca();
             Boolean controlloIns = false;
             
@@ -439,10 +461,14 @@ public class Gioco {
                 barche.add(temp);
                 aggiungiBarcaGriglia(temp);
             }
+            if (giocatoreAttuale.nome.compareTo("giocatore 1") == 0)
+                System.out.println("INSF");
             invertiSemaforo();  //inverte il semaforo da un giocatore all'altro
+            
         }
 
-        private void richiestaFuoco () {
+        private void richiestaFuoco () throws Exception {
+            aspettaTurno(this.nome);
             Coordinata temp;
             while (input.hasNextLine()) {
                 while (!Semaforo(this.nome)) {} //cicla finche non è il turno del giocatore
@@ -526,6 +552,7 @@ public class Gioco {
         
         @Override
         public void run() {
+            String temp = null;
             try {
                     setup();
                     inserisciBarche();
@@ -538,22 +565,32 @@ public class Gioco {
                 }
         }
 
-        private void setup() throws IOException {
+        private void setup() throws Exception {
             input = new Scanner(socket.getInputStream());
             output = new PrintWriter(socket.getOutputStream(), true);
             output.println("Benvenuto " + nome);
             initGriglia();
             if (nome.equals("giocatore 1")) { //controlla se è il primo giocatore a connettersi
-                giocatoreAttuale = this;
-                output.println("In attesa del secondo giocatore");
+                
+                setGiocatoreAttuale(this);
+                Gioco.this.stampa(giocatoreAttuale.nome + " connesso");
+                output.println("G2M");
             }
             else {
+                
+                giocatoreAttuale.avversario = this;
                 avversario = giocatoreAttuale;
-                avversario.avversario = this;
-                avversario.output.println("Giocatore 2 collegato");
+                Gioco.this.stampa(giocatoreAttuale.avversario.nome + "connesso");
+                avversario.output.println("G2C");
+                this.output.println("In attesa della fine dell'inserimento dell'avversario");
             }
-            while (avversario == null)
-            {}
-        }
+            if (nome.equals("giocatore 1")) {
+                String temp = input.nextLine();
+                while (temp.compareTo("G1P") != 0)
+                {System.out.println("attesa");
+                    }
+            }
+            System.out.println("finito setup " + this.nome);
+        } 
     }
 }
