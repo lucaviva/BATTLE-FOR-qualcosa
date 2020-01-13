@@ -14,12 +14,13 @@ public class Barca {
     private Coordinata inizio;
     private Coordinata fine;
     private char Orientamento;
-    private int valore = lunghezza;
+    private int valore;
 
     public Barca(int lunghezza, Coordinata inizio, char Orientamento) {
         this.lunghezza = lunghezza;
         this.inizio = inizio;
         this.Orientamento = Orientamento;
+        this.valore = lunghezza;
     }
 
     Barca() {
@@ -31,6 +32,7 @@ public class Barca {
 
     public void setLunghezza(int lunghezza) {
         this.lunghezza = lunghezza;
+        this.valore = lunghezza;
     }
 
     public Coordinata getInizio() {

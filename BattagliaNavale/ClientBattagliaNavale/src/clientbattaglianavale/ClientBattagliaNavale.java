@@ -27,11 +27,14 @@ public class ClientBattagliaNavale {
 
         String testo = in.nextLine();
         if (testo.startsWith("G2M")) {
-            System.out.println("In attesa del secondo giocatore");
+            System.out.println("In attesa del secondo giocatore \n");
         }
         else if (testo.startsWith("G2C")) {
-            System.out.println("Giocatore 2 collegato");
+            System.out.println("Giocatore 2 collegato \n");
             out.println("G1P");
+        }
+        else if (testo.startsWith("G2IF")) {
+            System.out.println("Inizio fase di fuoco dei giocatori \n");
         }
         else if (testo.startsWith("INS")) {
             inserimentoBarca(testo.charAt(3));
@@ -41,7 +44,13 @@ public class ClientBattagliaNavale {
             fuoco(testo.charAt(3));
             return;
         }
-        else if (testo.startsWith("WIN") || testo.startsWith("LOS")) {
+        else if (testo.startsWith("WIN")){
+            System.out.println("Hai distrutto tutte le barche vittoria!");
+            finePartita = true;
+            return;
+        }
+        else if (testo.startsWith("LOS")) {
+            System.out.println("Ti hanno distrutto tutte le barche!");
             finePartita = true;
             return;
         }
@@ -59,7 +68,7 @@ public class ClientBattagliaNavale {
     
     private void inserimentoBarca(char ins) {
         if (ins == 'S') {
-            System.out.println("Inserire coordinate e orientamento barca dell'inizio della barca(se orizzontale si estende a destra e in verticale verso il basso)(le coordinate vaanno scritte in lettere es: 1 = a, 2 = b ... 21 = u) es. barca gto (x = g = 7, y = t = 20, o = orizzontale)");
+            System.out.println("Inserire coordinate e orientamento barca dell'inizio della barca(se orizzontale si estende a destra e in verticale verso il basso)\n(le coordinate vaanno scritte in lettere es: 1 = a, 2 = b ... 21 = u)\nes. barca gto (x = g = 7, y = t = 20, o = orizzontale)\n");
    
         }
         if (ins == 'E') {
@@ -82,13 +91,13 @@ public class ClientBattagliaNavale {
             out.println(tastiera.nextLine());
         }
         else if (ins == 'F') {
-            System.out.println("Inserimento completato, in attesa dell'altro giocatore");
+            System.out.println("Inserimento completato, in attesa dell'altro giocatore \n");
         }
     } 
     
     private void fuoco(char ins) {
         if (ins == 'O') {
-            System.out.println("Inserire coordinate da colpire (le coordinate vaanno scritte in lettere es: 1 = a, 2 = b, etc..)");
+            System.out.println("Inserire coordinate da colpire (le coordinate vanno scritte in lettere es: 1 = a, 2 = b, etc..)");
             out.println(tastiera.nextLine());
         }
         else if (ins == 'E') {
@@ -96,24 +105,27 @@ public class ClientBattagliaNavale {
             this.fuoco('O');
         }
         else if (ins == 'A') {
-            System.out.println("Colpo non andato a segno. Acqua!");
+            System.out.println("Colpo non andato a segno. Acqua! \n");
         }
         else if (ins == 'C') {
-            System.out.println("Colpo andato a segno. Colpito!");
+            System.out.println("Colpo andato a segno. Colpito! \n");
         }
         else if (ins == 'R') {
-            System.out.println("Fatto fuoco su una casella già colpita");
+            System.out.println("Fatto fuoco su una casella già colpita \n");
         }
         else if(ins == 'M')
-            System.out.println("Complimenti hai distrutto una barca");
+            System.out.println("Complimenti hai distrutto una barca \n");
     }
     
     private void colpoRicevuto(String ins) {
         if (ins.charAt(3) == 'B') {
-            System.out.println("Una tua barca e' stata colpita in x: " + (Integer.valueOf(ins.substring(5, 6))-10) + " y:" + (Integer.valueOf(ins.substring(7, 8))-10));
+            System.out.println("L'avversario ha colpito una tua barca in x: " + (Integer.valueOf(ins.substring(5, 6))) + " y:" + (Integer.valueOf(ins.substring(7, 8))) + "\n");
         }
         else if (ins.charAt(3) == 'A') {
-            System.out.println("L'avversario ha colpitol'acqua in x: " + (Integer.valueOf(ins.substring(5, 6))-10) + " y:" + (Integer.valueOf(ins.substring(7, 8))-10));
+            System.out.println("L'avversario ha colpito l'acqua in x: " + (Integer.valueOf(ins.substring(5, 6))) + " y:" + (Integer.valueOf(ins.substring(7, 8))) + "\n");
+        }
+        else if (ins.charAt(3) == 'G') {
+            System.out.println("L'avversario ha fatto fuoco di nuovo in x: " + (Integer.valueOf(ins.substring(5, 6))) + " y:" + (Integer.valueOf(ins.substring(7, 8))) + "\n");
         }
     }
     
@@ -141,7 +153,7 @@ public class ClientBattagliaNavale {
         System.out.println("Inserire l'indirizzo ip con il quale creare si vuole creare connessione: ");
         ip = input.nextLine();
         System.out.println("Inserire porta con la quale si vuole creare la connessione: ");
-        porta = input.nextInt();
+        porta = input.nextInt(); 
         ClientBattagliaNavale client = new ClientBattagliaNavale(ip, porta);
         client.gioca();
         

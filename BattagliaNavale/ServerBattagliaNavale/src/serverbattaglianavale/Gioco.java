@@ -21,6 +21,7 @@ import java.util.concurrent.Executors;
 public class Gioco {
 
     Giocatore giocatoreAttuale;
+    boolean statoPartita = true;
     
     
     public Gioco() {
@@ -38,8 +39,10 @@ public class Gioco {
     public synchronized void setGiocatoreAttuale(Giocatore giocatoreAttuale) {
         this.giocatoreAttuale = giocatoreAttuale;
     }
-    
-    
+
+    public boolean isStatoPartita() {
+        return statoPartita;
+    }
     
     public synchronized  boolean Semaforo (String nomeGiocatore){
         if (giocatoreAttuale.nome.equals(nomeGiocatore))
@@ -51,7 +54,7 @@ public class Gioco {
     }
     
     public synchronized void invertiSemaforo () {
-        giocatoreAttuale = giocatoreAttuale.avversario;
+        setGiocatoreAttuale(getGiocatoreAttuale().avversario);
         
         notifyAll();
     }
@@ -315,18 +318,22 @@ public class Gioco {
 
         private Coordinata interpretaInsCoordinata (String testo) {
             Coordinata c = new Coordinata();
-            if(testo != null || testo.length() == 2) {
+            if(testo != null && testo.length() == 2) {
                 //segmento la Stringa in input
                 testo = testo.toLowerCase();
                 int x = Character.getNumericValue(testo.charAt(0));
                 int y = Character.getNumericValue(testo.charAt(1));
                 if ( x >= 10 && x <= 30 ){ //controllo che il valore di x sia una lettera dell'alfabeto. a = 0 -> u = 21
                     if ( y >= 10 && y <= 30 ) //controllo che il valore di y sia una lettera dell'alfabeto. a = 0 -> u = 21
-                            c = new Coordinata(Character.getNumericValue(x) - 10, Character.getNumericValue(y) - 10);
-                    else
+                            c = new Coordinata(x - 10, y - 10);
+                    else {
                         output.println("FIRE"); //prefisso INS sta per inserimento, E sta per "errore nell'inserimento"
-                }   else
+                        return null;
+                    }
+                }   else {
                         output.println("FIRE"); //prefisso INS sta per inserimento, E sta per "errore nell'inserimento"
+                        return null;
+                }
             }
              return c;
         }
@@ -399,6 +406,7 @@ public class Gioco {
             output.println(temp);
         }
         
+        
         private void inserisciBarche() throws InterruptedException{
             aspettaTurno(this.nome);
             Barca temp = new Barca();
@@ -418,7 +426,6 @@ public class Gioco {
 
             barche.add(temp);
             aggiungiBarcaGriglia(temp);
-
             do{
                 stampaGriglia();
                 output.println("INS4"); //prefisso INS sta per inserimento, 4 sta per "inserisci barca da 4"
@@ -461,8 +468,14 @@ public class Gioco {
                 barche.add(temp);
                 aggiungiBarcaGriglia(temp);
             }
-            if (giocatoreAttuale.nome.compareTo("giocatore 1") == 0)
-                System.out.println("INSF");
+            Gioco.this.stampa("Finito inserimento " + this.nome);
+            if (giocatoreAttuale.nome.compareTo("giocatore 1") == 0) {
+                output.println("INSF");
+                    }
+            else {
+                avversario.output.println("G2IF");
+                this.output.println("Inizio fase di fuoco dei giocatori");
+            }
             invertiSemaforo();  //inverte il semaforo da un giocatore all'altro
             
         }
@@ -470,7 +483,7 @@ public class Gioco {
         private void richiestaFuoco () throws Exception {
             aspettaTurno(this.nome);
             Coordinata temp;
-            while (input.hasNextLine()) {
+            while (!vittoria()) {
                 while (!Semaforo(this.nome)) {} //cicla finche non è il turno del giocatore
                 do {
                     output.println("FIRO");
@@ -481,32 +494,32 @@ public class Gioco {
                         avversario.griglia[temp.getX()][temp.getY()] = 3; //valore di casella Acqua colpita 
                         break;
                     }
-                    if (avversario.griglia[temp.getX()][temp.getY()] == 1) { //controllo se la casella vale Barca
+                    else if (avversario.griglia[temp.getX()][temp.getY()] == 1) { //controllo se la casella vale Barca
                         output.println("FIRC");
+                        avversario.output.println("COLB" + (temp.getX()+10) + "" + (temp.getY()+10));
                         avversario.griglia[temp.getX()][temp.getY()] = 2; //valore di casella Barca colpita
                         colpita(temp);
                         break;
                     }
-                    if (avversario.griglia[temp.getX()][temp.getY()] == 2 || avversario.griglia[temp.getX()][temp.getY()] == 3) { //controllo se la casella vale Colpito
+                    else if (avversario.griglia[temp.getX()][temp.getY()] == 2 || avversario.griglia[temp.getX()][temp.getY()] == 3) { //controllo se la casella vale Colpito
                         output.println("FIRR");
+                        avversario.output.println("COLG" + (temp.getX()+10) + "" + (temp.getY()+10));
+                        break;
                     } 
-                }while (true); //ripete solo nel caso che l'ultimo è vero
+                }while (temp != null); //ripete finche l'inserimento è sbagliato
+              Gioco.this.stampa("Colpo sparato " + this.nome);
               invertiSemaforo();  //inverte il semaforo da un giocatore all'altro  
-            }
-            if(vittoria())
-            {
-                output.println("Hai distrutto tutte le barche vittoria!");
-                avversario.output.println("Ti hanno distrutto tutte le barche!");
-                return;
             }
         }
         
         private void colpita(Coordinata colpo){
+            Coordinata temp = null;
             for (int i = 0; i < avversario.barche.size(); i++) {
                 if(avversario.barche.get(i).getValore() != 0){
                     if(avversario.barche.get(i).getOrientamento() == 'o'){
                         for (int j = 0; j < avversario.barche.get(i).getLunghezza(); j++) {
-                            if(colpo == new Coordinata(avversario.barche.get(i).getInizio().getX(), avversario.barche.get(i).getInizio().getY() + j)){
+                            temp = new Coordinata(avversario.barche.get(i).getInizio().getX() + j, avversario.barche.get(i).getInizio().getY());
+                            if(colpo.getX() == temp.getX() && colpo.getY() == temp.getY()){
                                 if(avversario.barche.get(i).getValore() == 1){
                                     output.println("FIRM");
                                     avversario.output.println("COLB" + (colpo.getX()+10) + "" + (colpo.getY()+10));
@@ -519,7 +532,8 @@ public class Gioco {
                     }
                     if(avversario.barche.get(i).getOrientamento() == 'v'){
                         for (int j = 0; j < avversario.barche.get(i).getLunghezza(); j++) {
-                            if(colpo == new Coordinata(avversario.barche.get(i).getInizio().getX() + j, avversario.barche.get(i).getInizio().getY())){
+                            temp = new Coordinata(avversario.barche.get(i).getInizio().getX() , avversario.barche.get(i).getInizio().getY() + j);
+                            if(colpo == temp){
                                 if(avversario.barche.get(i).getValore() == 1){
                                     output.println("FIRM");
                                     avversario.output.println("COLB" + (colpo.getX()+10) + "" + (colpo.getY()+10));
@@ -535,7 +549,7 @@ public class Gioco {
             
         }
         
-        private boolean vittoria(){
+        public synchronized boolean vittoria(){
             int distrutte=0;
             for (int i = 0; i < avversario.barche.size(); i++) {
                 if(avversario.barche.get(i).getValore() == 0){
@@ -544,6 +558,7 @@ public class Gioco {
                 if(distrutte == avversario.barche.size()){ 
                     output.println("WIN");
                     avversario.output.println("LOS");
+                    Gioco.this.stampa("Partita finita, vincitore: " + this.nome);
                     return true;
                 }
             }
